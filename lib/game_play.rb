@@ -1,0 +1,1 @@
+# This will open up the word text file and selects the random word to guess

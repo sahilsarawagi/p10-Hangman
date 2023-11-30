@@ -1,0 +1,1 @@
+# this will save (serialize) the current position of the game in json format
