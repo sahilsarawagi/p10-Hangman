@@ -7,6 +7,7 @@ class GamePlay
     @number_of_turns = 12
     @guessed_word=[]
     @correct_guess=[]
+    @word_copy = ""
     select_random_word
     start_game
   end
@@ -18,6 +19,7 @@ class GamePlay
       puts @word
     end
     @correct_guess.push(*["-"]*@word_length)
+    @word_copy=@word.clone
   end
 
   def display_wrong_guess
@@ -57,9 +59,18 @@ class GamePlay
       @number_of_turns-=1
       puts "number of turns left #{@number_of_turns}"
     end
+    game_over
   end
   # has to add game_over function
-  
+  def game_over
+    if !@correct_guess.include?("-")
+      puts("You Won")
+      puts("Congratulations, you correctly guessed the word")
+    else
+      puts("You Lose")
+      puts("The Answer is #{@word_copy}")
+    end
+  end
   #Make it more readable
 end
 
