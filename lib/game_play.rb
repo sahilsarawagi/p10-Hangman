@@ -13,6 +13,7 @@ class GamePlay
 
   private
 
+  # This function selects any random word between length 5 to 12 from the words.txt file  
   def select_random_word
     while !(@word_length>5 && @word_length<12)
       random_number = rand(10001)
@@ -24,24 +25,26 @@ class GamePlay
     @word_copy=@word.clone
   end
 
-  def display_wrong_guess
-    puts "you have guessed these words: #{@guessed_word.join(", ")}"
+  # This function display all guesses you have made
+  def display_guesses
+    unless @guessed_word.empty?
+      puts "You have guessed these words: #{@guessed_word.join(", ")}"
+    end
   end
 
-  def updating_answer(gussed_word_index,character)
-    gussed_word_index.each { |index| @correct_guess[index] = character } 
-  end
-
+  # This checks the position of your guessed word and filled it into your answer acording to letter position
   def filing_the_answer(current_gussed_word)
     current_gussed_word_index = (0 ... @word_length).find_all { |i| @word[i,1] == current_gussed_word}
-    updating_answer(current_gussed_word_index,current_gussed_word)
+    current_gussed_word_index.each { |index| @correct_guess[index] = current_gussed_word } 
   end
 
+  # This removes the letter from the word that you have correctly guessed
   def updating_word(current_gussed_word)
     @word.gsub!(current_gussed_word,' ')
     @word_length = @word.length
   end
 
+  # This game logic handles the logic of the game based on, if your input is correct or not
   def game_logic(current_gussed_word)
     if @word.include?(current_gussed_word)
       puts "Correct Guess"
@@ -56,6 +59,7 @@ class GamePlay
     end
   end
 
+  # This checks if your input is valid or not
   def validate_input(input)
     until input.length==1 && ('a'..'z').include?(input)
       puts "Invalid Input"
@@ -65,6 +69,7 @@ class GamePlay
     input
   end
 
+  # this starts the game
   def start_game
     puts "Hello, Welcome to the Game"
     puts @correct_guess.join(' ')
@@ -76,7 +81,7 @@ class GamePlay
       current_gussed_word = gets.chomp.downcase
       current_gussed_word = validate_input(current_gussed_word)
       game_logic(current_gussed_word)
-      display_wrong_guess
+      display_guesses
       puts @correct_guess.join(' ')
       @number_of_turns-=1
       puts "number of turns left #{@number_of_turns}"
@@ -84,6 +89,7 @@ class GamePlay
     game_over
   end
 
+  # this shows the gameover message
   def game_over
     if !@correct_guess.include?("-")
       puts("You Won")
