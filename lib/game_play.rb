@@ -1,6 +1,5 @@
-# This will open up the word text file and selects the random word to guess
-
 class GamePlay
+
   def initialize
     @word=""
     @word_length = @word.length
@@ -11,6 +10,9 @@ class GamePlay
     select_random_word
     start_game
   end
+
+  private
+
   def select_random_word
     while !(@word_length>5 && @word_length<12)
       random_number = rand(10001)
@@ -27,41 +29,61 @@ class GamePlay
   end
 
   def updating_answer(gussed_word_index,character)
-    for index in gussed_word_index
-      @correct_guess[index] = character
-    end
-    
+    gussed_word_index.each { |index| @correct_guess[index] = character } 
   end
+
+  def filing_the_answer(current_gussed_word)
+    current_gussed_word_index = (0 ... @word_length).find_all { |i| @word[i,1] == current_gussed_word}
+    updating_answer(current_gussed_word_index,current_gussed_word)
+  end
+
+  def updating_word(current_gussed_word)
+    @word.gsub!(current_gussed_word,' ')
+    @word_length = @word.length
+  end
+
+  def game_logic(current_gussed_word)
+    if @word.include?(current_gussed_word)
+      puts "Correct Guess"
+      filing_the_answer(current_gussed_word)
+      @guessed_word.push(current_gussed_word)
+      updating_word(current_gussed_word)
+    elsif @guessed_word.include?(current_gussed_word)  
+      puts "You have already guessed this word, guees new word, please"
+    else 
+      puts "Wrong Guess"
+      @guessed_word.push(current_gussed_word)
+    end
+  end
+
+  def validate_input(input)
+    until input.length==1 && ('a'..'z').include?(input)
+      puts "Invalid Input"
+      puts "guess any letter"
+      input = gets.chomp.downcase
+    end
+    input
+  end
+
   def start_game
     puts "Hello, Welcome to the Game"
     puts @correct_guess.join(' ')
+
     while @number_of_turns>0 
-      if !@correct_guess.include?("-")
-        break
-      end
+      break unless @correct_guess.include?('-')
+
       puts "guess any letter"
       current_gussed_word = gets.chomp.downcase
-      if @word.include?(current_gussed_word)
-        puts "Correct Guess"
-        current_gussed_word_index = (0 ... @word_length).find_all { |i| @word[i,1] == current_gussed_word}
-        updating_answer(current_gussed_word_index,current_gussed_word)
-        @guessed_word.push(current_gussed_word);
-        @word.gsub!(current_gussed_word," ")
-        @word_length = @word.length
-      elsif @guessed_word.include?(current_gussed_word)  
-        puts "You have already guessed this word, guees new word, please"
-      else 
-        puts "Wrong Guess"
-        @guessed_word.push(current_gussed_word)
-      end
+      current_gussed_word = validate_input(current_gussed_word)
+      game_logic(current_gussed_word)
       display_wrong_guess
       puts @correct_guess.join(' ')
       @number_of_turns-=1
       puts "number of turns left #{@number_of_turns}"
-    end
+      end
     game_over
   end
-  # has to add game_over function
+
   def game_over
     if !@correct_guess.include?("-")
       puts("You Won")
@@ -71,7 +93,7 @@ class GamePlay
       puts("The Answer is #{@word_copy}")
     end
   end
-  #Make it more readable
+
 end
 
 game = GamePlay.new
