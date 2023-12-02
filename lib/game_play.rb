@@ -1,3 +1,4 @@
+require './lib/save_game'
 class GamePlay
 
   def initialize
@@ -69,6 +70,13 @@ class GamePlay
     input
   end
 
+  def check_for_game_save(input)
+    if input=='save'
+      save = Save.new(self)
+      exit 1
+    end
+  end
+
   # this starts the game
   def start_game
     puts "Hello, Welcome to the Game"
@@ -79,6 +87,7 @@ class GamePlay
 
       puts "guess any letter"
       current_gussed_word = gets.chomp.downcase
+      check_for_game_save(current_gussed_word)
       current_gussed_word = validate_input(current_gussed_word)
       game_logic(current_gussed_word)
       display_guesses
