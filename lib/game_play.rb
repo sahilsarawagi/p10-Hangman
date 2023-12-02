@@ -102,4 +102,4 @@ class GamePlay
 
 end
 
-game = GamePlay.new
+# game = GamePlay.new
